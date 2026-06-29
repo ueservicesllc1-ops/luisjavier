@@ -43,6 +43,8 @@ export default function AdminPage() {
   const [loadingSessions, setLoadingSessions] = useState(true);
 
   // Form states
+  const [editMode, setEditMode] = useState<"create" | "add_photos">("create");
+  const [selectedSessionId, setSelectedSessionId] = useState("");
   const [selectedClientId, setSelectedClientId] = useState("");
   const [newClientName, setNewClientName] = useState("");
   const [newClientPin, setNewClientPin] = useState("");
@@ -273,6 +275,96 @@ export default function AdminPage() {
     }
   };
 
+  const handleAddPhotosToSession = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedSessionId) {
+      alert("Please select a session.");
+      return;
+    }
+    if (filesToUpload.length === 0) {
+      alert("Please select at least one photo to upload.");
+      return;
+    }
+
+    setUploadProgress({ current: 0, total: filesToUpload.length, filename: "", status: "uploading" });
+
+    try {
+      const sessionDoc = sessions.find((s) => s.id === selectedSessionId);
+      if (!sessionDoc) throw new Error("Session not found");
+
+      let currentPhotoCount = sessionDoc.photoCount || 0;
+      let coverImageUrl = sessionDoc.coverImageUrl || "";
+
+      // Upload photos one by one
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const file = filesToUpload[i];
+        setUploadProgress({
+          current: i + 1,
+          total: filesToUpload.length,
+          filename: file.name,
+          status: "uploading",
+        });
+
+        // B2 Key structure: sessions/{sessionId}/photos/{filename}
+        const b2Key = `sessions/${selectedSessionId}/photos/${Date.now()}_${file.name}`;
+        
+        // Upload to server side B2 API
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("key", b2Key);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to upload ${file.name}`);
+        }
+
+        // Get Dimensions
+        const dimensions = await getImageDimensions(file);
+
+        // Add Photo doc to Firestore
+        await addDoc(collection(db, "photos"), {
+          sessionId: selectedSessionId,
+          filename: file.name,
+          b2Key,
+          thumbnailKey: b2Key,
+          width: dimensions.width,
+          height: dimensions.height,
+          size: file.size,
+          downloadCount: 0,
+          order: currentPhotoCount + i,
+          createdAt: Timestamp.now(),
+        });
+
+        // Set cover if not set
+        if (!coverImageUrl && i === 0) {
+          coverImageUrl = `${process.env.NEXT_PUBLIC_B2_URL || "https://s3.us-east-005.backblazeb2.com/photogra"}/${b2Key}`;
+        }
+      }
+
+      // Update session with new photoCount and coverImageUrl
+      await updateDoc(doc(db, "sessions", selectedSessionId), {
+        photoCount: currentPhotoCount + filesToUpload.length,
+        ...(coverImageUrl ? { coverImageUrl } : {}),
+      });
+
+      setUploadProgress((prev) => ({ ...prev, status: "success" }));
+      alert("Photos added to session successfully!");
+
+      // Clear forms
+      setFilesToUpload([]);
+      setSelectedSessionId("");
+      await fetchSessions();
+    } catch (err: any) {
+      console.error(err);
+      setUploadProgress((prev) => ({ ...prev, status: "error" }));
+      alert("An error occurred while uploading: " + err.message);
+    }
+  };
+
   if (checkingAuth) {
     return (
       <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--color-bg)" }}>
@@ -302,91 +394,150 @@ export default function AdminPage() {
           
           {/* Main session configuration form */}
           <div>
-            <form onSubmit={handleUploadAndSave} className="card" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            <form onSubmit={editMode === "create" ? handleUploadAndSave : handleAddPhotosToSession} className="card" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+              
+              <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem", borderBottom: "1px solid var(--color-border)", paddingBottom: "1rem" }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditMode("create");
+                    setFilesToUpload([]);
+                  }}
+                  className={`btn ${editMode === "create" ? "btn-gold" : "btn-outline"}`}
+                  style={{ flex: 1, padding: "0.5rem 1rem", fontSize: "0.75rem", justifyContent: "center" }}
+                >
+                  Create New Session
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditMode("add_photos");
+                    setFilesToUpload([]);
+                  }}
+                  className={`btn ${editMode === "add_photos" ? "btn-gold" : "btn-outline"}`}
+                  style={{ flex: 1, padding: "0.5rem 1rem", fontSize: "0.75rem", justifyContent: "center" }}
+                >
+                  Add Photos to Existing
+                </button>
+              </div>
+
               <h2 className="serif" style={{ fontSize: "1.5rem", color: "var(--color-cream)", borderBottom: "1px solid var(--color-border)", paddingBottom: "0.75rem", marginBottom: "0.5rem" }}>
-                1. Create New Session
+                {editMode === "create" ? "1. Create New Session" : "1. Add Photos to Session"}
               </h2>
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Select Client
-                </label>
-                {loadingClients ? (
-                  <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>Loading clients...</p>
-                ) : (
-                  <select
-                    className="input"
-                    value={selectedClientId}
-                    onChange={(e) => setSelectedClientId(e.target.value)}
-                    required
-                    style={{ appearance: "none" }}
-                  >
-                    <option value="" style={{ background: "#111" }}>Select a client</option>
-                    {clients.map((c) => (
-                      <option key={c.id} value={c.id} style={{ background: "#111" }}>
-                        {c.name} (PIN: {c.pin})
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Project / Session Title
-                </label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    className="input"
-                    required
-                    placeholder="e.g. Civil Wedding Maria & Juan"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row-2">
+              {editMode === "add_photos" && (
                 <div>
                   <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                    Date
+                    Select Session
                   </label>
-                  <input
-                    type="date"
-                    className="input"
-                    required
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                  />
+                  {loadingSessions ? (
+                    <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>Loading sessions...</p>
+                  ) : (
+                    <select
+                      className="input"
+                      value={selectedSessionId}
+                      onChange={(e) => setSelectedSessionId(e.target.value)}
+                      required
+                      style={{ appearance: "none" }}
+                    >
+                      <option value="" style={{ background: "#111" }}>Select a session</option>
+                      {sessions.map((s) => {
+                        const cl = clients.find((c) => c.id === s.clientId);
+                        return (
+                          <option key={s.id} value={s.id} style={{ background: "#111" }}>
+                            {s.title} ({cl?.name || "Unknown client"})
+                          </option>
+                        );
+                      })}
+                    </select>
+                  )}
                 </div>
-                <div>
-                  <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    className="input"
-                    placeholder="e.g. Caracas, Venezuela"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </div>
-              </div>
+              )}
 
-              <div>
-                <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Description
-                </label>
-                <textarea
-                  className="input"
-                  rows={3}
-                  placeholder="Details or short description of the event..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  style={{ resize: "none" }}
-                />
-              </div>
+              {editMode === "create" && (
+                <>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
+                      Select Client
+                    </label>
+                    {loadingClients ? (
+                      <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>Loading clients...</p>
+                    ) : (
+                      <select
+                        className="input"
+                        value={selectedClientId}
+                        onChange={(e) => setSelectedClientId(e.target.value)}
+                        required
+                        style={{ appearance: "none" }}
+                      >
+                        <option value="" style={{ background: "#111" }}>Select a client</option>
+                        {clients.map((c) => (
+                          <option key={c.id} value={c.id} style={{ background: "#111" }}>
+                            {c.name} (PIN: {c.pin})
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
+                      Project / Session Title
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type="text"
+                        className="input"
+                        required
+                        placeholder="e.g. Civil Wedding Maria & Juan"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row-2">
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        className="input"
+                        required
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        className="input"
+                        placeholder="e.g. Caracas, Venezuela"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
+                      Description
+                    </label>
+                    <textarea
+                      className="input"
+                      rows={3}
+                      placeholder="Details or short description of the event..."
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      style={{ resize: "none" }}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Upload source selectors */}
               <div>
@@ -507,7 +658,7 @@ export default function AdminPage() {
                 ) : (
                   <>
                     <Upload size={15} />
-                    Save & Upload Project
+                    {editMode === "create" ? "Save & Upload Project" : "Add Photos to Session"}
                   </>
                 )}
               </button>
