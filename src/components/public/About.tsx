@@ -75,7 +75,7 @@ export default function About() {
                   left: "1.5rem",
                 }}
               >
-                <p className="eyebrow" style={{ marginBottom: "0.25rem" }}>Luis García</p>
+                <p className="eyebrow" style={{ marginBottom: "0.25rem" }}>Luis Javier</p>
                 <p
                   style={{
                     fontFamily: "var(--font-serif)",
@@ -115,7 +115,7 @@ export default function About() {
                   display: "block",
                 }}
               >
-                8+
+                15+
               </span>
               <span
                 style={{
@@ -157,7 +157,7 @@ export default function About() {
                 marginBottom: "1.5rem",
               }}
             >
-              Mi nombre es Luis García. Llevo más de 8 años capturando momentos que definen historias. 
+              Mi nombre es Luis Javier. Llevo más de 15 años capturando momentos que definen historias. 
               Nacido en Venezuela, mi trabajo está influenciado por la luz natural y la emoción humana.
             </p>
             <p
