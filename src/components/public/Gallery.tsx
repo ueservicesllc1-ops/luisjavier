@@ -9,7 +9,7 @@ const GALLERY_ITEMS = [
     id: "1",
     src: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=70",
-    category: "Bodas",
+    category: "Weddings",
     title: "Luna & Marco",
     aspect: "tall",
   },
@@ -17,82 +17,79 @@ const GALLERY_ITEMS = [
     id: "2",
     src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70",
-    category: "Retratos",
-    title: "Luz Natural",
+    category: "Portraits",
+    title: "Natural Light",
     aspect: "wide",
   },
   {
     id: "3",
     src: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&q=70",
-    category: "Bodas",
-    title: "El Gran Día",
+    category: "Weddings",
+    title: "The Big Day",
     aspect: "square",
   },
   {
     id: "4",
     src: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&q=70",
-    category: "Retratos",
-    title: "Serenidad",
+    category: "Portraits",
+    title: "Serenity",
     aspect: "tall",
   },
   {
     id: "5",
     src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&q=70",
-    category: "Comercial",
-    title: "Equipo Pro",
+    category: "Commercial",
+    title: "Pro Team",
     aspect: "square",
   },
   {
     id: "6",
     src: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&q=70",
-    category: "Bodas",
-    title: "Votos Eternos",
+    category: "Weddings",
+    title: "Eternal Vows",
     aspect: "wide",
   },
   {
     id: "7",
     src: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=70",
-    category: "Retratos",
-    title: "Mirada Profunda",
+    category: "Portraits",
+    title: "Deep Glance",
     aspect: "tall",
   },
   {
     id: "8",
     src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=70",
-    category: "Retratos",
-    title: "Personalidad",
+    category: "Portraits",
+    title: "Personality",
     aspect: "square",
   },
   {
     id: "9",
     src: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=800&q=80",
     thumb: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=400&q=70",
-    category: "Bodas",
-    title: "Amor en Flor",
+    category: "Weddings",
+    title: "Love in Bloom",
     aspect: "wide",
   },
 ];
 
-const CATEGORIES = ["Todos", "Bodas", "Retratos", "Comercial"];
+const CATEGORIES = ["All", "Weddings", "Portraits", "Commercial"];
 
 export default function Gallery() {
-  const [activeCategory, setActiveCategory] = useState("Todos");
+  const [activeCategory, setActiveCategory] = useState("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filtered =
-    activeCategory === "Todos"
+    activeCategory === "All"
       ? GALLERY_ITEMS
       : GALLERY_ITEMS.filter((i) => i.category === activeCategory);
 
-  const columns = [0, 1, 2].map((col) =>
-    filtered.filter((_, idx) => idx % 3 === col)
-  );
 
   const openLightbox = (id: string) => {
     const idx = filtered.findIndex((i) => i.id === id);
@@ -105,17 +102,17 @@ export default function Gallery() {
     setLightboxIndex((i) => (i !== null ? (i + 1) % filtered.length : null));
 
   return (
-    <section id="galeria" className="section" style={{ background: "var(--color-bg)" }}>
+    <section id="gallery" className="section" style={{ background: "var(--color-bg)" }}>
       <div className="container">
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "4rem" }}>
           <p className="eyebrow" style={{ marginBottom: "1rem" }}>Portfolio</p>
           <h2 className="heading-section" style={{ marginBottom: "1rem" }}>
-            Galería de Trabajo
+            Work Gallery
           </h2>
           <span className="gold-line centered" />
           <p className="lead" style={{ maxWidth: 480, marginInline: "auto", marginTop: "1rem" }}>
-            Cada imagen cuenta una historia. Aquí una selección de mis trabajos más memorables.
+            Every image tells a story. Here is a selection of my most memorable work.
           </p>
         </div>
 
@@ -155,19 +152,10 @@ export default function Gallery() {
         </div>
 
         {/* Masonry Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "10px",
-          }}
-          className="gallery-grid"
-        >
-          {columns.map((col, colIdx) => (
-            <div key={colIdx} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {col.map((item) => (
-                <GalleryItem key={item.id} item={item} onOpen={openLightbox} />
-              ))}
+        <div className="gallery-grid">
+          {filtered.map((item) => (
+            <div key={item.id} className="gallery-grid-item">
+              <GalleryItem item={item} onOpen={openLightbox} />
             </div>
           ))}
         </div>
@@ -292,11 +280,20 @@ export default function Gallery() {
       )}
 
       <style>{`
+        .gallery-grid {
+          column-count: 3;
+          column-gap: 10px;
+          width: 100%;
+        }
+        .gallery-grid-item {
+          break-inside: avoid;
+          margin-bottom: 10px;
+        }
         @media (max-width: 768px) {
-          .gallery-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .gallery-grid { column-count: 2; }
         }
         @media (max-width: 480px) {
-          .gallery-grid { grid-template-columns: 1fr !important; }
+          .gallery-grid { column-count: 1; }
         }
       `}</style>
     </section>

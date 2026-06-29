@@ -51,22 +51,22 @@ export default function Footer() {
                   color: "var(--color-gold)",
                 }}
               >
-                Fotografía
+                Photography
               </span>
             </div>
             <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", maxWidth: 240, lineHeight: 1.7 }}>
-              Capturando momentos con alma. Fotógrafo profesional disponible para viajar.
+              Capturing moments with soul. Professional photographer available for travel.
             </p>
           </div>
 
           {/* Links */}
           <div style={{ display: "flex", gap: "4rem", flexWrap: "wrap" }}>
             <div>
-              <p className="eyebrow" style={{ marginBottom: "1rem" }}>Navegar</p>
-              {["Galería", "Servicios", "Sobre Mí", "Contacto"].map((l) => (
+              <p className="eyebrow" style={{ marginBottom: "1rem" }}>Navigate</p>
+              {["Gallery", "Services", "About Me", "Contact"].map((l) => (
                 <a
                   key={l}
-                  href={`#${l.toLowerCase().replace(" ", "-").replace("í", "i").replace("é", "e")}`}
+                  href={`#${l.toLowerCase().replace(" ", "-")}`}
                   style={{
                     display: "block",
                     fontSize: "0.85rem",
@@ -82,7 +82,7 @@ export default function Footer() {
               ))}
             </div>
             <div>
-              <p className="eyebrow" style={{ marginBottom: "1rem" }}>Clientes</p>
+              <p className="eyebrow" style={{ marginBottom: "1rem" }}>Clients</p>
               <Link
                 href="/login"
                 style={{
@@ -95,14 +95,14 @@ export default function Footer() {
                 onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--color-gold)")}
                 onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)")}
               >
-                Iniciar Sesión
+                Sign In
               </Link>
             </div>
           </div>
 
           {/* Social */}
           <div>
-            <p className="eyebrow" style={{ marginBottom: "1rem" }}>Redes</p>
+            <p className="eyebrow" style={{ marginBottom: "1rem" }}>Social</p>
             <div style={{ display: "flex", gap: "0.75rem" }}>
               {[
                 { icon: <Camera size={16} />, href: "#", label: "Instagram" },
@@ -157,10 +157,10 @@ export default function Footer() {
           }}
         >
           <p style={{ fontSize: "0.78rem", color: "var(--color-text-faint)" }}>
-            © {year} Luis Fotografía. Todos los derechos reservados.
+            © {year} Luis Photography. All rights reserved.
           </p>
           <p style={{ fontSize: "0.78rem", color: "var(--color-text-faint)" }}>
-            Hecho con{" "}
+            Made with{" "}
             <span style={{ color: "var(--color-gold)" }}>♥</span>
           </p>
         </div>

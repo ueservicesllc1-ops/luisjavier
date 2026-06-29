@@ -14,26 +14,26 @@ export default function Contact() {
   };
 
   return (
-    <section id="contacto" className="section" style={{ background: "var(--color-bg-card)", borderTop: "1px solid var(--color-border)" }}>
+    <section id="contact" className="section" style={{ background: "var(--color-bg-card)", borderTop: "1px solid var(--color-border)" }}>
       <div className="container">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1.4fr", gap: "clamp(3rem, 7vw, 7rem)", alignItems: "start" }} className="contact-grid">
           {/* Info side */}
           <div>
-            <p className="eyebrow" style={{ marginBottom: "1.25rem" }}>Contáctame</p>
+            <p className="eyebrow" style={{ marginBottom: "1.25rem" }}>Contact Me</p>
             <h2 className="heading-section" style={{ marginBottom: "1.5rem" }}>
-              Hagamos algo<br />
-              <span style={{ color: "var(--color-gold)", fontStyle: "italic" }}>increíble</span>
+              Let's make something<br />
+              <span style={{ color: "var(--color-gold)", fontStyle: "italic" }}>incredible</span>
             </h2>
             <span className="gold-line" />
 
             <p style={{ fontSize: "0.95rem", color: "var(--color-text-muted)", lineHeight: 1.8, marginTop: "1.5rem", marginBottom: "3rem" }}>
-              ¿Tienes un proyecto en mente? Me encantaría escucharte. 
-              Cuéntame sobre tu idea y planificaremos juntos algo memorable.
+              Have a project in mind? I'd love to hear from you. 
+              Tell me about your idea and we will plan something memorable together.
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
               {[
-                { icon: <MapPin size={16} />, label: "Ubicación", value: "Paterson, New Jersey, USA · Disponible para viajar" },
+                { icon: <MapPin size={16} />, label: "Location", value: "Paterson, New Jersey, USA · Available to travel" },
                 { icon: <Mail size={16} />, label: "Email", value: "luisuf@gmail.com" },
                 { icon: <Phone size={16} />, label: "WhatsApp", value: "+1 (201) 708-4725" },
                 { icon: <Camera size={16} />, label: "Instagram", value: "@luisfotografia" },
@@ -67,7 +67,7 @@ export default function Contact() {
           </div>
 
           {/* Form side */}
-          <div className="card" style={{ padding: "2.5rem" }}>
+          <div className="card" style={{ padding: "clamp(1.25rem, 4vw, 2.5rem)" }}>
             {status === "sent" ? (
               <div style={{ textAlign: "center", padding: "3rem 1rem" }}>
                 <div
@@ -88,10 +88,10 @@ export default function Contact() {
                   ✓
                 </div>
                 <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.8rem", color: "var(--color-cream)", marginBottom: "0.75rem" }}>
-                  ¡Mensaje enviado!
+                  Message Sent!
                 </h3>
                 <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>
-                  Te responderé en menos de 24 horas.
+                  I will get back to you in less than 24 hours.
                 </p>
               </div>
             ) : (
@@ -99,13 +99,13 @@ export default function Contact() {
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-two-col">
                   <div>
                     <label style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                      Nombre
+                      Name
                     </label>
                     <input
                       className="input"
                       type="text"
                       required
-                      placeholder="Tu nombre"
+                      placeholder="Your name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                     />
@@ -118,7 +118,7 @@ export default function Contact() {
                       className="input"
                       type="email"
                       required
-                      placeholder="tu@email.com"
+                      placeholder="you@example.com"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                     />
@@ -127,7 +127,7 @@ export default function Contact() {
 
                 <div>
                   <label style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                    Servicio
+                    Service
                   </label>
                   <select
                     className="input"
@@ -135,23 +135,23 @@ export default function Contact() {
                     onChange={(e) => setForm({ ...form, service: e.target.value })}
                     style={{ appearance: "none" }}
                   >
-                    <option value="" style={{ background: "#111" }}>Selecciona un servicio</option>
-                    <option value="boda" style={{ background: "#111" }}>Bodas & Celebraciones</option>
-                    <option value="retrato" style={{ background: "#111" }}>Retratos de Arte</option>
-                    <option value="comercial" style={{ background: "#111" }}>Fotografía Comercial</option>
-                    <option value="destino" style={{ background: "#111" }}>Destino & Viajes</option>
+                    <option value="" style={{ background: "#111" }}>Select a service</option>
+                    <option value="boda" style={{ background: "#111" }}>Weddings & Celebrations</option>
+                    <option value="retrato" style={{ background: "#111" }}>Fine Art Portraits</option>
+                    <option value="comercial" style={{ background: "#111" }}>Commercial Photography</option>
+                    <option value="destino" style={{ background: "#111" }}>Destination & Travel</option>
                   </select>
                 </div>
 
                 <div>
                   <label style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                    Mensaje
+                    Message
                   </label>
                   <textarea
                     className="input"
                     rows={5}
                     required
-                    placeholder="Cuéntame sobre tu proyecto o fecha especial..."
+                    placeholder="Tell me about your project or special date..."
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     style={{ resize: "none" }}
@@ -165,11 +165,11 @@ export default function Contact() {
                   style={{ justifyContent: "center", opacity: status === "sending" ? 0.7 : 1 }}
                 >
                   {status === "sending" ? (
-                    "Enviando..."
+                    "Sending..."
                   ) : (
                     <>
                       <Send size={15} />
-                      Enviar Mensaje
+                      Send Message
                     </>
                   )}
                 </button>

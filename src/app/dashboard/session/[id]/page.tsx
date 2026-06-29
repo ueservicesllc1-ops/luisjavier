@@ -8,7 +8,7 @@ import { Download, ArrowLeft, X, ChevronLeft, ChevronRight, Play, Package } from
 function formatDate(ts: any) {
   if (!ts) return "";
   const date = ts.toDate ? ts.toDate() : new Date(ts);
-  return date.toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" });
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
 export default function SessionPage() {
@@ -89,9 +89,6 @@ export default function SessionPage() {
     }
   };
 
-  const columns = [0, 1, 2, 3].map((col) =>
-    photos.filter((_, idx) => idx % 4 === col)
-  );
 
   if (loading) {
     return (
@@ -121,16 +118,17 @@ export default function SessionPage() {
         style={{ marginBottom: "1.5rem", paddingLeft: 0, display: "flex", alignItems: "center", gap: "0.4rem" }}
       >
         <ArrowLeft size={16} />
-        Mis sesiones
+        My Sessions
       </button>
 
       {/* Session header */}
       <div
+        className="session-header"
         style={{
           background: "var(--color-bg-card)",
           border: "1px solid var(--color-border)",
           borderRadius: "var(--radius-lg)",
-          padding: "2rem 2.5rem",
+          padding: "clamp(1.25rem, 4vw, 2.5rem)",
           marginBottom: "2rem",
           display: "flex",
           justifyContent: "space-between",
@@ -145,7 +143,7 @@ export default function SessionPage() {
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, var(--color-gold), transparent)" }} />
 
         <div>
-          <p className="eyebrow" style={{ marginBottom: "0.5rem" }}>Sesión fotográfica</p>
+          <p className="eyebrow" style={{ marginBottom: "0.5rem" }}>Photography Session</p>
           <h1
             style={{
               fontFamily: "var(--font-serif)",
@@ -165,13 +163,13 @@ export default function SessionPage() {
           <p style={{ fontSize: "0.82rem", color: "var(--color-text-faint)" }}>{formatDate(session.date)}</p>
 
           <div style={{ display: "flex", gap: "1.5rem", marginTop: "1rem" }}>
-            <span style={{ fontSize: "0.82rem", color: "var(--color-text-muted)" }}>📷 {photos.length} fotos</span>
+            <span style={{ fontSize: "0.82rem", color: "var(--color-text-muted)" }}>📷 {photos.length} photos</span>
             {videos.length > 0 && <span style={{ fontSize: "0.82rem", color: "var(--color-text-muted)" }}>🎬 {videos.length} videos</span>}
           </div>
         </div>
 
         {/* Actions */}
-        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+        <div className="session-actions" style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           {photos.length > 0 && (
             <button
               className="btn btn-gold"
@@ -182,12 +180,12 @@ export default function SessionPage() {
               {downloadingAll ? (
                 <>
                   <span style={{ width: 14, height: 14, border: "2px solid rgba(0,0,0,0.3)", borderTopColor: "#000", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                  Preparando ZIP...
+                  Preparing ZIP...
                 </>
               ) : (
                 <>
                   <Package size={15} />
-                  Descargar Todo
+                  Download All
                 </>
               )}
             </button>
@@ -207,32 +205,18 @@ export default function SessionPage() {
               marginBottom: "1.25rem",
             }}
           >
-            Fotografías
+            Photos
           </h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "8px",
-              marginBottom: "3rem",
-            }}
-            className="photo-masonry"
-          >
-            {columns.map((col, colIdx) => (
-              <div key={colIdx} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                {col.map((photo) => {
-                  const globalIdx = photos.findIndex((p) => p.id === photo.id);
-                  return (
-                    <PhotoTile
-                      key={photo.id}
-                      photo={photo}
-                      onOpen={() => setLightbox(globalIdx)}
-                      onDownload={() => downloadPhoto(photo)}
-                      isDownloading={downloading === photo.id}
-                    />
-                  );
-                })}
+          <div className="photo-masonry">
+            {photos.map((photo, globalIdx) => (
+              <div key={photo.id} className="photo-masonry-item">
+                <PhotoTile
+                  photo={photo}
+                  onOpen={() => setLightbox(globalIdx)}
+                  onDownload={() => downloadPhoto(photo)}
+                  isDownloading={downloading === photo.id}
+                />
               </div>
             ))}
           </div>
@@ -255,7 +239,7 @@ export default function SessionPage() {
 
       {photos.length === 0 && videos.length === 0 && (
         <div className="card" style={{ padding: "4rem", textAlign: "center" }}>
-          <p style={{ color: "var(--color-text-muted)" }}>Esta sesión aún no tiene archivos disponibles.</p>
+          <p style={{ color: "var(--color-text-muted)" }}>This session does not have any files available yet.</p>
         </div>
       )}
 
@@ -305,7 +289,7 @@ export default function SessionPage() {
               }}
             >
               <Download size={14} />
-              Descargar foto
+              Download photo
             </button>
             <span style={{ position: "absolute", bottom: "-3.2rem", left: 0, fontSize: "0.82rem", color: "var(--color-text-muted)" }}>
               {lightbox + 1} / {photos.length}
@@ -315,9 +299,39 @@ export default function SessionPage() {
       )}
 
       <style>{`
+        .photo-masonry {
+          column-count: 4;
+          column-gap: 8px;
+          width: 100%;
+          margin-bottom: 3rem;
+        }
+        .photo-masonry-item {
+          break-inside: avoid;
+          margin-bottom: 8px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 900px) { .photo-masonry { grid-template-columns: repeat(3,1fr) !important; } }
-        @media (max-width: 600px) { .photo-masonry { grid-template-columns: repeat(2,1fr) !important; } }
+        @media (max-width: 1024px) {
+          .photo-masonry { column-count: 3; }
+        }
+        @media (max-width: 768px) {
+          .photo-masonry { column-count: 2; }
+        }
+        @media (max-width: 600px) {
+          .session-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .session-actions {
+            width: 100% !important;
+          }
+          .session-actions button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .photo-masonry { column-count: 1; }
+        }
       `}</style>
     </div>
   );
@@ -385,7 +399,7 @@ function VideoCard({ video }: { video: Video }) {
           style={{ fontSize: "0.72rem", padding: "0.45rem 1rem", width: "100%", justifyContent: "center" }}
         >
           <Download size={13} />
-          Descargar video
+          Download video
         </a>
       </div>
     </div>

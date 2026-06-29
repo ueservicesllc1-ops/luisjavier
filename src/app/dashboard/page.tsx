@@ -8,13 +8,13 @@ import { Calendar, Images, Clock, ChevronRight, Sparkles } from "lucide-react";
 function formatDate(ts: any) {
   if (!ts) return "";
   const date = ts.toDate ? ts.toDate() : new Date(ts);
-  return date.toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" });
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 }
 
 const STATUS_MAP = {
-  ready: { label: "Lista", class: "badge-ready" },
-  processing: { label: "Procesando", class: "badge-processing" },
-  archived: { label: "Archivada", class: "badge-gold" },
+  ready: { label: "Ready", class: "badge-ready" },
+  processing: { label: "Processing", class: "badge-processing" },
+  archived: { label: "Archived", class: "badge-gold" },
 };
 
 export default function DashboardPage() {
@@ -73,11 +73,12 @@ export default function DashboardPage() {
     <div className="container">
       {/* Welcome banner */}
       <div
+        className="dashboard-banner"
         style={{
           background: "linear-gradient(135deg, var(--color-bg-card) 0%, rgba(201,169,110,0.05) 100%)",
           border: "1px solid var(--color-border)",
           borderRadius: "var(--radius-lg)",
-          padding: "2rem 2.5rem",
+          padding: "clamp(1.25rem, 5vw, 2.5rem)",
           marginBottom: "2rem",
           position: "relative",
           overflow: "hidden",
@@ -106,11 +107,11 @@ export default function DashboardPage() {
             marginBottom: "0.4rem",
           }}
         >
-          Bienvenido,{" "}
+          Welcome,{" "}
           <span style={{ color: "var(--color-gold)", fontStyle: "italic" }}>{displayName}</span>
         </h1>
         <p style={{ fontSize: "0.9rem", color: "var(--color-text-muted)" }}>
-          Aquí encontrarás todas tus sesiones fotográficas. Descarga tus fotos cuando quieras.
+          Here you will find all your photography sessions. Download your photos anytime.
         </p>
       </div>
 
@@ -125,9 +126,9 @@ export default function DashboardPage() {
         className="stats-grid"
       >
         {[
-          { icon: <Images size={20} color="var(--color-gold)" />, label: "Sesiones totales", value: sessions.length },
-          { icon: <Calendar size={20} color="var(--color-gold)" />, label: "Sesiones listas", value: readySessions.length },
-          { icon: <Clock size={20} color="var(--color-gold)" />, label: "Fotos disponibles", value: totalPhotos.toLocaleString() },
+          { icon: <Images size={20} color="var(--color-gold)" />, label: "Total sessions", value: sessions.length },
+          { icon: <Calendar size={20} color="var(--color-gold)" />, label: "Ready sessions", value: readySessions.length },
+          { icon: <Clock size={20} color="var(--color-gold)" />, label: "Available photos", value: totalPhotos.toLocaleString() },
         ].map((stat) => (
           <div
             key={stat.label}
@@ -185,7 +186,7 @@ export default function DashboardPage() {
             color: "var(--color-cream)",
           }}
         >
-          Mis Sesiones
+          My Sessions
         </h2>
       </div>
 
@@ -199,10 +200,10 @@ export default function DashboardPage() {
         >
           <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>📷</div>
           <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.4rem", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-            Sin sesiones aún
+            No sessions yet
           </h3>
           <p style={{ fontSize: "0.88rem", color: "var(--color-text-faint)" }}>
-            Cuando tu fotógrafo suba tus fotos, aparecerán aquí.
+            Once your photographer uploads your photos, they will appear here.
           </p>
         </div>
       ) : (
@@ -220,7 +221,10 @@ export default function DashboardPage() {
       )}
 
       <style>{`
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 480px) {
           .stats-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
@@ -315,7 +319,7 @@ function SessionCard({ session }: { session: Session }) {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--color-border)" }}>
           <div style={{ display: "flex", gap: "1rem" }}>
             <span style={{ fontSize: "0.78rem", color: "var(--color-text-muted)" }}>
-              📷 {session.photoCount || 0} fotos
+              📷 {session.photoCount || 0} photos
             </span>
             {(session.videoCount ?? 0) > 0 && (
               <span style={{ fontSize: "0.78rem", color: "var(--color-text-muted)" }}>

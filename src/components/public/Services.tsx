@@ -3,42 +3,42 @@
 const SERVICES = [
   {
     icon: "💍",
-    title: "Bodas & Celebraciones",
-    desc: "Capturamos cada emoción de tu día especial. Desde los preparativos hasta el último baile, preservamos cada momento con sensibilidad artística.",
-    includes: ["Cobertura completa", "2 fotógrafos", "Álbum premium", "Galería digital"],
-    price: "desde $1,800",
+    title: "Weddings & Celebrations",
+    desc: "Capturing every emotion of your special day. From preparations to the final dance, we preserve every moment with artistic sensitivity.",
+    includes: ["Full coverage", "2 photographers", "Premium album", "Digital gallery"],
+    price: "from $1,800",
   },
   {
     icon: "🎭",
-    title: "Retratos de Arte",
-    desc: "Sesiones individuales o familiares con dirección creativa personalizada. Buscamos revelar tu esencia auténtica en cada toma.",
-    includes: ["2 horas de sesión", "Locación a elegir", "50 fotos editadas", "Galería privada"],
-    price: "desde $350",
+    title: "Fine Art Portraits",
+    desc: "Individual or family sessions with personalized creative direction. We aim to reveal your true essence in every frame.",
+    includes: ["2-hour session", "Choice of location", "50 edited photos", "Private gallery"],
+    price: "from $350",
   },
   {
     icon: "🏢",
-    title: "Fotografía Comercial",
-    desc: "Productos, marcas, espacios y equipos. Imágenes profesionales que elevan tu presencia visual y conectan con tu audiencia.",
-    includes: ["Estudio o locación", "Dirección de arte", "Entrega en 72h", "Licencia comercial"],
-    price: "desde $600",
+    title: "Commercial Photography",
+    desc: "Products, branding, architecture, and teams. Professional images that elevate your visual presence and connect with your audience.",
+    includes: ["Studio or location", "Art direction", "72h delivery", "Commercial license"],
+    price: "from $600",
   },
   {
     icon: "✈️",
-    title: "Destino & Viajes",
-    desc: "Te acompaño a cualquier rincón del mundo. Sesiones en destinos nacionales e internacionales con estética editorial.",
-    includes: ["Viaje incluido en cotización", "Sesión amanecer/atardecer", "Edición cinemática"],
-    price: "Cotización especial",
+    title: "Destination & Travel",
+    desc: "Accompanying you to any corner of the world. Editorial-style sessions in national and international destinations.",
+    includes: ["Travel expenses included", "Sunrise/sunset session", "Cinematic editing"],
+    price: "Custom quote",
   },
 ];
 
 export default function Services() {
   return (
-    <section id="servicios" className="section" style={{ background: "var(--color-bg-card)", borderTop: "1px solid var(--color-border)", borderBottom: "1px solid var(--color-border)" }}>
+    <section id="services" className="section" style={{ background: "var(--color-bg-card)", borderTop: "1px solid var(--color-border)", borderBottom: "1px solid var(--color-border)" }}>
       <div className="container">
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "4rem" }}>
-          <p className="eyebrow" style={{ marginBottom: "1rem" }}>Lo que ofrezco</p>
-          <h2 className="heading-section">Servicios</h2>
+          <p className="eyebrow" style={{ marginBottom: "1rem" }}>What I Offer</p>
+          <h2 className="heading-section">Services</h2>
           <span className="gold-line centered" style={{ margin: "1.5rem auto" }} />
         </div>
 
@@ -143,7 +143,7 @@ export default function Services() {
                   {s.price}
                 </span>
                 <a
-                  href="#contacto"
+                  href="#contact"
                   style={{
                     fontSize: "0.72rem",
                     fontWeight: 500,
@@ -158,7 +158,7 @@ export default function Services() {
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--color-gold)")}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)")}
                 >
-                  Consultar →
+                  Inquire →
                 </a>
               </div>
             </div>

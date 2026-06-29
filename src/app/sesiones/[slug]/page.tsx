@@ -55,7 +55,7 @@ export default function ClientSessionPortal() {
     setVerifying(true);
 
     if (pin.trim() !== client.pin) {
-      setError("PIN de acceso incorrecto. Por favor, verifícalo.");
+      setError("Incorrect access PIN. Please double-check it.");
       setVerifying(false);
       return;
     }
@@ -77,7 +77,7 @@ export default function ClientSessionPortal() {
       router.push("/dashboard");
     } catch (err: any) {
       console.error(err);
-      setError("Error al autorizar el acceso: " + (err.message || err));
+      setError("Error authorizing access: " + (err.message || err));
     } finally {
       setVerifying(false);
     }
@@ -94,9 +94,9 @@ export default function ClientSessionPortal() {
   if (!client) {
     return (
       <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--color-bg)", gap: "1rem" }}>
-        <h1 className="serif" style={{ fontSize: "2rem", color: "var(--color-cream)" }}>Sesión No Encontrada</h1>
-        <p style={{ color: "var(--color-text-muted)", fontSize: "0.9rem" }}>El enlace ingresado no es válido o ha caducado.</p>
-        <Link href="/" className="btn btn-gold" style={{ marginTop: "1rem" }}>Volver al sitio</Link>
+        <h1 className="serif" style={{ fontSize: "2rem", color: "var(--color-cream)" }}>Session Not Found</h1>
+        <p style={{ color: "var(--color-text-muted)", fontSize: "0.9rem" }}>The link you entered is invalid or has expired.</p>
+        <Link href="/" className="btn btn-gold" style={{ marginTop: "1rem" }}>Back to site</Link>
       </div>
     );
   }
@@ -135,19 +135,19 @@ export default function ClientSessionPortal() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <span className="serif" style={{ fontSize: "2rem", color: "var(--color-cream)", display: "block" }}>Luis</span>
-          <span style={{ fontSize: "0.55rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--color-gold)" }}>Fotografía</span>
+          <span style={{ fontSize: "0.55rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--color-gold)" }}>Photography</span>
         </div>
 
         {/* Content Card */}
         <div className="card" style={{ padding: "2.5rem", background: "var(--color-bg-card)", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           
           <div style={{ textAlign: "center", marginBottom: "0.5rem" }}>
-            <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>Galería Privada</span>
+            <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>Private Gallery</span>
             <h1 className="serif" style={{ fontSize: "1.6rem", color: "var(--color-cream)", marginTop: "0.25rem" }}>
               {client.name}
             </h1>
             <p style={{ fontSize: "0.82rem", color: "var(--color-text-muted)", marginTop: "0.4rem" }}>
-              Por favor ingresa tu PIN de seguridad para acceder a tus fotos.
+              Please enter your security PIN to access your photos.
             </p>
           </div>
 
@@ -160,7 +160,7 @@ export default function ClientSessionPortal() {
           <form onSubmit={handleAccess} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.68rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                PIN de Acceso
+                Access PIN
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -169,7 +169,7 @@ export default function ClientSessionPortal() {
                   pattern="[0-9]*"
                   className="input"
                   required
-                  placeholder="Introduce tu PIN"
+                  placeholder="Enter your PIN"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   style={{ paddingLeft: "3rem", textAlign: "center", letterSpacing: pin ? "0.3em" : "normal", fontSize: pin ? "1.2rem" : "0.9rem" }}
@@ -182,12 +182,12 @@ export default function ClientSessionPortal() {
               {verifying ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Accediendo...
+                  Accessing...
                 </>
               ) : (
                 <>
                   <LogIn size={15} />
-                  Ver Mis Fotos
+                  View My Photos
                 </>
               )}
             </button>
@@ -197,10 +197,10 @@ export default function ClientSessionPortal() {
 
         <div style={{ textAlign: "center", marginTop: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link href="/" style={{ fontSize: "0.78rem", color: "var(--color-text-faint)", display: "inline-flex", alignItems: "center", gap: "0.4rem" }}>
-            ← Volver al inicio
+            ← Back to home
           </Link>
           <Link href="/login" style={{ fontSize: "0.78rem", color: "var(--color-gold)", transition: "opacity 0.2s" }}>
-            Acceso Fotógrafo →
+            Photographer Access →
           </Link>
         </div>
 

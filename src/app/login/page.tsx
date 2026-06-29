@@ -24,13 +24,13 @@ export default function LoginPage() {
       router.push("/dashboard");
     } catch (err: any) {
       const msgs: Record<string, string> = {
-        "auth/user-not-found": "No existe una cuenta con este correo.",
-        "auth/wrong-password": "Contraseña incorrecta.",
-        "auth/invalid-email": "Correo inválido.",
-        "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
-        "auth/invalid-credential": "Credenciales incorrectas.",
+        "auth/user-not-found": "No account exists with this email.",
+        "auth/wrong-password": "Incorrect password.",
+        "auth/invalid-email": "Invalid email address.",
+        "auth/too-many-requests": "Too many attempts. Please try again later.",
+        "auth/invalid-credential": "Incorrect credentials.",
       };
-      setError(msgs[err.code] || "Error al iniciar sesión.");
+      setError(msgs[err.code] || "Failed to sign in.");
     } finally {
       setLoading(false);
     }
@@ -56,7 +56,7 @@ export default function LoginPage() {
       }
       router.push("/dashboard");
     } catch (err: any) {
-      setError("Error al iniciar sesión con Google.");
+      setError("Error signing in with Google.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -138,7 +138,7 @@ export default function LoginPage() {
                 color: "var(--color-gold)",
               }}
             >
-              Fotografía
+              Photography
             </span>
           </Link>
         </div>
@@ -154,10 +154,10 @@ export default function LoginPage() {
               marginBottom: "0.5rem",
             }}
           >
-            Iniciar Sesión
+            Sign In
           </h1>
           <p style={{ fontSize: "0.88rem", color: "var(--color-text-muted)" }}>
-            Acceso para el fotógrafo / administrador
+            Access for the photographer / admin
           </p>
         </div>
 
@@ -211,14 +211,14 @@ export default function LoginPage() {
                 marginBottom: "0.55rem",
               }}
             >
-              Correo electrónico
+              Email Address
             </label>
             <input
               className="input"
               type="email"
               required
               autoComplete="email"
-              placeholder="tu@correo.com"
+              placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -236,7 +236,7 @@ export default function LoginPage() {
                 marginBottom: "0.55rem",
               }}
             >
-              Contraseña
+              Password
             </label>
             <div style={{ position: "relative" }}>
               <input
@@ -284,12 +284,12 @@ export default function LoginPage() {
             {loading ? (
               <>
                 <span style={{ width: 16, height: 16, border: "2px solid rgba(0,0,0,0.3)", borderTopColor: "#000", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
-                Ingresando...
+                Signing In...
               </>
             ) : (
               <>
                 <LogIn size={15} />
-                Ingresar
+                Sign In
               </>
             )}
           </button>
@@ -318,20 +318,20 @@ export default function LoginPage() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
             </svg>
-            Continuar con Google
+            Continue with Google
           </button>
         </form>
 
         <p style={{ textAlign: "center", marginTop: "1.5rem", fontSize: "0.82rem", color: "var(--color-text-faint)" }}>
-          ¿Problemas para acceder?{" "}
+          Problems signing in?{" "}
           <a href="mailto:luisuf@gmail.com" style={{ color: "var(--color-gold)", transition: "opacity 0.2s" }}>
-            Contáctame
+            Contact Me
           </a>
         </p>
 
         <div style={{ textAlign: "center", marginTop: "1rem" }}>
           <Link href="/" style={{ fontSize: "0.78rem", color: "var(--color-text-faint)", transition: "color 0.2s" }}>
-            ← Volver al sitio
+            ← Back to site
           </Link>
         </div>
       </div>

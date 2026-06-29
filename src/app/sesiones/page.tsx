@@ -30,7 +30,7 @@ export default function GeneralClientPortal() {
       if (snap.empty) {
         // Sign out if PIN check fails
         await signOut(auth);
-        setError("PIN de acceso incorrecto. Por favor verifícalo con tu fotógrafo.");
+        setError("Incorrect access PIN. Please double-check with your photographer.");
         setVerifying(false);
         return;
       }
@@ -51,7 +51,7 @@ export default function GeneralClientPortal() {
       router.push("/dashboard");
     } catch (err: any) {
       console.error(err);
-      setError("Error al autorizar el acceso: " + (err.message || err));
+      setError("Error authorizing access: " + (err.message || err));
       // Sign out on error
       try { await signOut(auth); } catch {}
     } finally {
@@ -93,19 +93,19 @@ export default function GeneralClientPortal() {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <span className="serif" style={{ fontSize: "2rem", color: "var(--color-cream)", display: "block" }}>Luis</span>
-          <span style={{ fontSize: "0.55rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--color-gold)" }}>Fotografía</span>
+          <span style={{ fontSize: "0.55rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--color-gold)" }}>Photography</span>
         </div>
 
         {/* Content Card */}
         <div className="card" style={{ padding: "2.5rem", background: "var(--color-bg-card)", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           
           <div style={{ textAlign: "center", marginBottom: "0.55rem" }}>
-            <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>Portal de Clientes</span>
+            <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>Client Portal</span>
             <h1 className="serif" style={{ fontSize: "1.6rem", color: "var(--color-cream)", marginTop: "0.25rem" }}>
-              Ver Mis Fotos
+              View My Photos
             </h1>
             <p style={{ fontSize: "0.82rem", color: "var(--color-text-muted)", marginTop: "0.4rem" }}>
-              Ingresa el PIN de acceso único que te proporcionó tu fotógrafo.
+              Enter the unique access PIN provided by your photographer.
             </p>
           </div>
 
@@ -118,7 +118,7 @@ export default function GeneralClientPortal() {
           <form onSubmit={handleAccess} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.68rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                PIN de Acceso
+                Access PIN
               </label>
               <div style={{ position: "relative" }}>
                 <input
@@ -127,7 +127,7 @@ export default function GeneralClientPortal() {
                   pattern="[0-9]*"
                   className="input"
                   required
-                  placeholder="Ej. 1619"
+                  placeholder="e.g. 1619"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   style={{ paddingLeft: "3rem", textAlign: "center", letterSpacing: pin ? "0.3em" : "normal", fontSize: pin ? "1.2rem" : "0.9rem" }}
@@ -140,12 +140,12 @@ export default function GeneralClientPortal() {
               {verifying ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  Accediendo...
+                  Accessing...
                 </>
               ) : (
                 <>
                   <LogIn size={15} />
-                  Ingresar
+                  Access
                 </>
               )}
             </button>
@@ -155,10 +155,10 @@ export default function GeneralClientPortal() {
 
         <div style={{ textAlign: "center", marginTop: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link href="/" style={{ fontSize: "0.78rem", color: "var(--color-text-faint)", display: "inline-flex", alignItems: "center", gap: "0.4rem" }}>
-            ← Volver al inicio
+            ← Back to home
           </Link>
           <Link href="/login" style={{ fontSize: "0.78rem", color: "var(--color-gold)", transition: "opacity 0.2s" }}>
-            Acceso Fotógrafo →
+            Photographer Access →
           </Link>
         </div>
 

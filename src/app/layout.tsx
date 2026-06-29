@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Luis Fotografía — Momentos que Perduran",
+  title: "Luis Photography — Moments that Last",
   description:
-    "Fotógrafo profesional especializado en bodas, retratos y eventos. Capturando emociones auténticas con una visión artística única.",
-  keywords: ["fotografía", "fotógrafo profesional", "bodas", "retratos", "sesiones fotográficas"],
+    "Professional photographer specializing in weddings, portraits, and events. Capturing authentic emotions with a unique artistic vision.",
+  keywords: ["photography", "professional photographer", "weddings", "portraits", "photoshoots"],
   openGraph: {
-    title: "Luis Fotografía — Momentos que Perduran",
-    description: "Fotógrafo profesional especializado en bodas, retratos y eventos.",
+    title: "Luis Photography — Moments that Last",
+    description: "Professional photographer specializing in weddings, portraits, and events.",
     type: "website",
   },
 };
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

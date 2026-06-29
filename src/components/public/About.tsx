@@ -2,7 +2,7 @@
 
 export default function About() {
   return (
-    <section id="sobre-mi" className="section" style={{ background: "var(--color-bg)", overflow: "hidden" }}>
+    <section id="about-me" className="section" style={{ background: "var(--color-bg)", overflow: "hidden" }}>
       <div className="container">
         <div
           style={{
@@ -17,6 +17,7 @@ export default function About() {
           <div style={{ position: "relative" }}>
             {/* Gold frame decoration */}
             <div
+              className="about-image-decor-1"
               style={{
                 position: "absolute",
                 top: "-20px",
@@ -29,6 +30,7 @@ export default function About() {
               }}
             />
             <div
+              className="about-image-decor-2"
               style={{
                 position: "absolute",
                 bottom: "-20px",
@@ -84,7 +86,7 @@ export default function About() {
                     color: "var(--color-cream)",
                   }}
                 >
-                  Fotógrafo de Autor
+                  Fine Art Photographer
                 </p>
               </div>
             </div>
@@ -126,16 +128,16 @@ export default function About() {
                   color: "var(--color-text-muted)",
                 }}
               >
-                Años
+                Years
               </span>
             </div>
           </div>
 
           {/* Text side */}
           <div>
-            <p className="eyebrow" style={{ marginBottom: "1.25rem" }}>Sobre mí</p>
+            <p className="eyebrow" style={{ marginBottom: "1.25rem" }}>About me</p>
             <h2 className="heading-section" style={{ marginBottom: "0.5rem" }}>
-              Una visión
+              A unique
             </h2>
             <h2
               className="heading-section"
@@ -145,7 +147,7 @@ export default function About() {
                 fontStyle: "italic",
               }}
             >
-              artística única
+              artistic vision
             </h2>
             <span className="gold-line" />
 
@@ -157,8 +159,8 @@ export default function About() {
                 marginBottom: "1.5rem",
               }}
             >
-              Mi nombre es Luis Javier. Llevo más de 15 años capturando momentos que definen historias. 
-              Nacido en Venezuela, mi trabajo está influenciado por la luz natural y la emoción humana.
+              My name is Luis Javier. I have been capturing moments that define stories for over 15 years. 
+              Born in Venezuela, my work is deeply influenced by natural light and human emotion.
             </p>
             <p
               style={{
@@ -168,12 +170,13 @@ export default function About() {
                 marginBottom: "2.5rem",
               }}
             >
-              Creo que la mejor fotografía no se planifica — se siente. Mi enfoque es minimalista: 
-              menos pose, más autenticidad. Cada sesión es un diálogo entre el lente y el alma.
+              I believe the best photography isn't planned — it is felt. My approach is minimalist: 
+              less posing, more authenticity. Every session is a dialogue between the lens and the soul.
             </p>
 
             {/* Skills/values */}
             <div
+              className="about-skills-grid"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
@@ -182,10 +185,10 @@ export default function About() {
               }}
             >
               {[
-                { label: "Luz Natural", icon: "☀️" },
-                { label: "Edición Artística", icon: "🎨" },
-                { label: "Retratos de Alma", icon: "🎭" },
-                { label: "Momentos Únicos", icon: "✨" },
+                { label: "Natural Light", icon: "☀️" },
+                { label: "Artistic Editing", icon: "🎨" },
+                { label: "Soul Portraits", icon: "🎭" },
+                { label: "Unique Moments", icon: "✨" },
               ].map((item) => (
                 <div
                   key={item.label}
@@ -214,8 +217,8 @@ export default function About() {
               ))}
             </div>
 
-            <a href="#contacto" className="btn btn-gold">
-              Conversemos →
+            <a href="#contact" className="btn btn-gold">
+              Let's Chat →
             </a>
           </div>
         </div>
@@ -225,6 +228,11 @@ export default function About() {
         @media (max-width: 768px) {
           .about-grid { grid-template-columns: 1fr !important; }
           .about-badge { right: 0.5rem !important; }
+        }
+        @media (max-width: 480px) {
+          .about-skills-grid { grid-template-columns: 1fr !important; }
+          .about-image-decor-1 { top: -10px !important; left: -10px !important; }
+          .about-image-decor-2 { bottom: -10px !important; right: -10px !important; }
         }
       `}</style>
     </section>

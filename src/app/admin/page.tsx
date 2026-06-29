@@ -289,13 +289,13 @@ export default function AdminPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
           <Link href="/dashboard" className="btn btn-ghost" style={{ display: "flex", alignItems: "center", gap: "0.5rem", paddingLeft: 0 }}>
             <ArrowLeft size={16} />
-            Ir al Dashboard
+            Go to Dashboard
           </Link>
-          <span className="badge badge-gold">Panel Administrador</span>
+          <span className="badge badge-gold">Admin Panel</span>
         </div>
 
         <h1 className="serif" style={{ fontSize: "2.4rem", color: "var(--color-cream)", marginBottom: "2.5rem" }}>
-          Administrar <span style={{ color: "var(--color-gold)", fontStyle: "italic" }}>Sesiones & Proyectos</span>
+          Manage <span style={{ color: "var(--color-gold)", fontStyle: "italic" }}>Sessions & Projects</span>
         </h1>
 
         <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "2rem" }} className="admin-grid">
@@ -304,15 +304,15 @@ export default function AdminPage() {
           <div>
             <form onSubmit={handleUploadAndSave} className="card" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
               <h2 className="serif" style={{ fontSize: "1.5rem", color: "var(--color-cream)", borderBottom: "1px solid var(--color-border)", paddingBottom: "0.75rem", marginBottom: "0.5rem" }}>
-                1. Crear Nueva Sesión
+                1. Create New Session
               </h2>
 
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Seleccionar Cliente
+                  Select Client
                 </label>
                 {loadingClients ? (
-                  <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>Cargando clientes...</p>
+                  <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>Loading clients...</p>
                 ) : (
                   <select
                     className="input"
@@ -321,7 +321,7 @@ export default function AdminPage() {
                     required
                     style={{ appearance: "none" }}
                   >
-                    <option value="" style={{ background: "#111" }}>Selecciona un cliente</option>
+                    <option value="" style={{ background: "#111" }}>Select a client</option>
                     {clients.map((c) => (
                       <option key={c.id} value={c.id} style={{ background: "#111" }}>
                         {c.name} (PIN: {c.pin})
@@ -333,14 +333,14 @@ export default function AdminPage() {
 
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Título del Proyecto / Sesión
+                  Project / Session Title
                 </label>
                 <div style={{ position: "relative" }}>
                   <input
                     type="text"
                     className="input"
                     required
-                    placeholder="Ej. Boda Civil Maria & Juan"
+                    placeholder="e.g. Civil Wedding Maria & Juan"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
@@ -350,7 +350,7 @@ export default function AdminPage() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }} className="form-row-2">
                 <div>
                   <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                    Fecha
+                    Date
                   </label>
                   <input
                     type="date"
@@ -362,12 +362,12 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                    Locación
+                    Location
                   </label>
                   <input
                     type="text"
                     className="input"
-                    placeholder="Ej. Caracas, Venezuela"
+                    placeholder="e.g. Caracas, Venezuela"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                   />
@@ -376,12 +376,12 @@ export default function AdminPage() {
 
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Descripción
+                  Description
                 </label>
                 <textarea
                   className="input"
                   rows={3}
-                  placeholder="Detalles o descripción corta del evento..."
+                  placeholder="Details or short description of the event..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   style={{ resize: "none" }}
@@ -391,7 +391,7 @@ export default function AdminPage() {
               {/* Upload source selectors */}
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  2. Cargar Fotos
+                  2. Upload Photos
                 </label>
                 
                 <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1rem" }}>
@@ -403,7 +403,7 @@ export default function AdminPage() {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <ImageIcon size={14} />
-                    Seleccionar Fotos
+                    Select Photos
                   </button>
 
                   {/* Select Folder button */}
@@ -414,7 +414,7 @@ export default function AdminPage() {
                     onClick={() => folderInputRef.current?.click()}
                   >
                     <FolderOpen size={14} />
-                    Subir Carpeta
+                    Upload Folder
                   </button>
                 </div>
 
@@ -444,7 +444,7 @@ export default function AdminPage() {
                 {filesToUpload.length > 0 && (
                   <div style={{ padding: "0.75rem 1rem", background: "var(--color-bg-elevated)", border: "1px dashed var(--color-border)", borderRadius: "var(--radius-md)", maxHeight: 150, overflowY: "auto" }}>
                     <p style={{ fontSize: "0.8rem", color: "var(--color-gold)", fontWeight: 500, marginBottom: "0.4rem" }}>
-                      {filesToUpload.length} foto(s) en cola:
+                      {filesToUpload.length} photo(s) queued:
                     </p>
                     <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                       {filesToUpload.slice(0, 15).map((f, index) => (
@@ -454,7 +454,7 @@ export default function AdminPage() {
                       ))}
                       {filesToUpload.length > 15 && (
                         <li style={{ fontSize: "0.72rem", color: "var(--color-text-faint)", fontStyle: "italic" }}>
-                          ... y {filesToUpload.length - 15} archivos más.
+                          ... and {filesToUpload.length - 15} more files.
                         </li>
                       )}
                     </ul>
@@ -468,13 +468,13 @@ export default function AdminPage() {
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", marginBottom: "0.5rem" }}>
                     <span style={{ color: "var(--color-cream)" }}>
                       {uploadProgress.status === "uploading"
-                        ? `Subiendo: ${uploadProgress.filename}`
+                        ? `Uploading: ${uploadProgress.filename}`
                         : uploadProgress.status === "success"
-                        ? "¡Completado!"
-                        : "Error en subida"}
+                        ? "Completed!"
+                        : "Upload error"}
                     </span>
                     <span style={{ color: "var(--color-gold)", fontWeight: 500 }}>
-                      {uploadProgress.current} / {uploadProgress.total} fotos
+                      {uploadProgress.current} / {uploadProgress.total} photos
                     </span>
                   </div>
                   
@@ -502,12 +502,12 @@ export default function AdminPage() {
                 {uploadProgress.status === "uploading" ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
-                    Subiendo Fotos...
+                    Uploading Photos...
                   </>
                 ) : (
                   <>
                     <Upload size={15} />
-                    Guardar y Subir Proyecto
+                    Save & Upload Project
                   </>
                 )}
               </button>
@@ -518,18 +518,18 @@ export default function AdminPage() {
           <div>
             <form onSubmit={handleCreateClient} className="card" style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.25rem", borderStyle: "dashed" }}>
               <h2 className="serif" style={{ fontSize: "1.4rem", color: "var(--color-cream)", borderBottom: "1px solid var(--color-border)", paddingBottom: "0.75rem", marginBottom: "0.5rem" }}>
-                Crear Nuevo Perfil de Cliente
+                Create New Client Profile
               </h2>
 
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Nombre Completo
+                  Full Name
                 </label>
                 <input
                   type="text"
                   className="input"
                   required
-                  placeholder="Ej. Ana Martínez"
+                  placeholder="e.g. Jane Doe"
                   value={newClientName}
                   onChange={(e) => setNewClientName(e.target.value)}
                 />
@@ -537,13 +537,13 @@ export default function AdminPage() {
 
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  PIN de Acceso (Ej. 4 dígitos)
+                  Access PIN (e.g. 4 digits)
                 </label>
                 <input
                   type="text"
                   className="input"
                   required
-                  placeholder="Ej. 1234"
+                  placeholder="e.g. 1234"
                   value={newClientPin}
                   onChange={(e) => setNewClientPin(e.target.value)}
                 />
@@ -551,12 +551,12 @@ export default function AdminPage() {
 
               <div>
                 <label style={{ display: "block", fontSize: "0.7rem", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: "0.5rem" }}>
-                  Teléfono (Opcional)
+                  Phone Number (Optional)
                 </label>
                 <input
                   type="text"
                   className="input"
-                  placeholder="Ej. +58 412 123 4567"
+                  placeholder="e.g. +1 (201) 555-0199"
                   value={newClientPhone}
                   onChange={(e) => setNewClientPhone(e.target.value)}
                 />
@@ -571,12 +571,12 @@ export default function AdminPage() {
                 {creatingClient ? (
                   <>
                     <Loader2 size={15} className="animate-spin" />
-                    Creando...
+                    Creating...
                   </>
                 ) : (
                   <>
                     <Plus size={15} />
-                    Crear Cliente
+                    Create Client
                   </>
                 )}
               </button>
@@ -588,19 +588,19 @@ export default function AdminPage() {
         {/* Sessions List Section */}
         <div style={{ marginTop: "4rem" }}>
           <h2 className="serif" style={{ fontSize: "1.8rem", color: "var(--color-cream)", marginBottom: "1.5rem" }}>
-            Sesiones Creadas
+            Created Sessions
           </h2>
 
           {loadingSessions ? (
             <div style={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
-              <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>Cargando sesiones...</p>
+              <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>Loading sessions...</p>
             </div>
           ) : sessions.length === 0 ? (
             <div className="card" style={{ padding: "3rem", textAlign: "center" }}>
-              <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>No se han creado sesiones todavía.</p>
+              <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>No sessions have been created yet.</p>
             </div>
           ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
               {sessions.map((sess) => {
                 const client = clients.find((c) => c.id === sess.clientId);
                 const accessUrl = typeof window !== "undefined"
@@ -619,14 +619,14 @@ export default function AdminPage() {
                       </div>
                       <div style={{ minWidth: 0 }}>
                         <h3 className="serif" style={{ fontSize: "1.2rem", color: "var(--color-cream)", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{sess.title}</h3>
-                        <p style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>📍 {sess.location || "Sin ubicación"}</p>
+                        <p style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>📍 {sess.location || "No location"}</p>
                       </div>
                     </div>
 
                     <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: "0.75rem", fontSize: "0.8rem", color: "var(--color-text-muted)", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                      <p>👤 <strong>Cliente:</strong> {client?.name || "Desconocido"}</p>
-                      <p>🔑 <strong>PIN de Acceso:</strong> <span style={{ color: "var(--color-gold)", fontWeight: "bold" }}>{client?.pin || "Ninguno"}</span></p>
-                      <p>🖼️ <strong>Fotos:</strong> {sess.photoCount || 0} archivos</p>
+                      <p>👤 <strong>Client:</strong> {client?.name || "Unknown"}</p>
+                      <p>🔑 <strong>Access PIN:</strong> <span style={{ color: "var(--color-gold)", fontWeight: "bold" }}>{client?.pin || "None"}</span></p>
+                      <p>🖼️ <strong>Photos:</strong> {sess.photoCount || 0} files</p>
                     </div>
 
                     <div style={{ marginTop: "auto", paddingTop: "0.5rem" }}>
@@ -634,13 +634,13 @@ export default function AdminPage() {
                         onClick={() => {
                           if (accessUrl) {
                             navigator.clipboard.writeText(accessUrl);
-                            alert("¡Enlace de acceso copiado al portapapeles!");
+                            alert("Access link copied to clipboard!");
                           }
                         }}
                         className="btn btn-outline"
                         style={{ width: "100%", fontSize: "0.72rem", padding: "0.5rem 1rem", justifyContent: "center", gap: "0.4rem" }}
                       >
-                        Copiar Enlace de Acceso
+                        Copy Access Link
                       </button>
                     </div>
                   </div>
@@ -661,6 +661,7 @@ export default function AdminPage() {
         }
         @media (max-width: 768px) {
           .admin-grid { grid-template-columns: 1fr !important; }
+          .form-row-2 { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

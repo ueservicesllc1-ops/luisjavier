@@ -14,7 +14,7 @@ export default function Hero() {
 
   return (
     <section
-      id="inicio"
+      id="home"
       style={{
         position: "relative",
         height: "100dvh",
@@ -95,7 +95,7 @@ export default function Hero() {
               textShadow: "0 1px 8px rgba(0,0,0,0.8)",
             }}
           >
-            Fotografía de Autor
+            Fine Art Photography
           </p>
 
           {/* Main heading */}
@@ -108,7 +108,7 @@ export default function Hero() {
               textShadow: "0 2px 20px rgba(0,0,0,0.9), 0 4px 40px rgba(0,0,0,0.6)",
             }}
           >
-            Momentos
+            Moments
           </h1>
           <h1
             className="heading-display"
@@ -124,7 +124,7 @@ export default function Hero() {
               filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.8))",
             }}
           >
-            que Perduran
+            that Last
           </h1>
 
           {/* Gold line */}
@@ -152,12 +152,13 @@ export default function Hero() {
               textShadow: "0 1px 12px rgba(0,0,0,0.9)",
             }}
           >
-            Capturo la esencia de cada instante con una mirada artística
-            que transforma lo efímero en eterno.
+            Capturing the essence of every moment with an artistic vision
+            that turns the ephemeral into eternal.
           </p>
 
           {/* CTAs */}
           <div
+            className="hero-ctas"
             style={{
               display: "flex",
               gap: "1rem",
@@ -166,17 +167,21 @@ export default function Hero() {
               animation: "fadeUp 0.8s 1.05s ease forwards",
             }}
           >
-            <a href="#galeria" className="btn btn-gold">
-              Ver Galería
+            <a href="#gallery" className="btn btn-gold hero-btn">
+              View Gallery
             </a>
-            <a href="#contacto" className="btn btn-outline">
-              Reservar Sesión
+            <Link href="/sesiones" className="btn btn-outline hero-btn" style={{ borderColor: "var(--color-gold)", color: "var(--color-gold)" }}>
+              Client Portal
+            </Link>
+            <a href="#contact" className="btn btn-outline hero-btn">
+              Book Session
             </a>
           </div>
         </div>
 
         {/* Stats strip */}
         <div
+          className="hero-stats"
           style={{
             display: "flex",
             gap: "3rem",
@@ -187,9 +192,9 @@ export default function Hero() {
           }}
         >
           {[
-            { num: "8+",   label: "Años de experiencia" },
-            { num: "2.4K", label: "Sesiones completadas" },
-            { num: "340+", label: "Clientes satisfechos" },
+            { num: "15+",  label: "Years of experience" },
+            { num: "2.4K", label: "Completed sessions" },
+            { num: "340+", label: "Happy clients" },
           ].map((s) => (
             <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
               <span
@@ -243,7 +248,7 @@ export default function Hero() {
             color: "var(--color-text-faint)",
           }}
         >
-          Explorar
+          Explore
         </span>
         <ChevronDown size={16} color="var(--color-gold)" style={{ animation: "bounce 2s infinite" }} />
       </div>
@@ -252,6 +257,20 @@ export default function Hero() {
         @keyframes bounce {
           0%, 100% { transform: translateY(0); }
           50%       { transform: translateY(6px); }
+        }
+        @media (max-width: 480px) {
+          .hero-ctas {
+            flex-direction: column !important;
+            gap: 0.75rem !important;
+          }
+          .hero-btn {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .hero-stats {
+            gap: 1.5rem !important;
+            margin-top: 3rem !important;
+          }
         }
       `}</style>
     </section>

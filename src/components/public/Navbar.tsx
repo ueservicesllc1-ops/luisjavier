@@ -4,10 +4,10 @@ import Link from "next/link";
 import { User } from "lucide-react";
 
 const navLinks = [
-  { href: "#galeria",   label: "Galería" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#sobre-mi",  label: "Sobre Mí" },
-  { href: "#contacto",  label: "Contacto" },
+  { href: "#gallery",   label: "Gallery" },
+  { href: "#services",  label: "Services" },
+  { href: "#about-me",  label: "About Me" },
+  { href: "#contact",   label: "Contact" },
 ];
 
 export default function Navbar() {
@@ -61,7 +61,7 @@ export default function Navbar() {
               color: "var(--color-gold)",
             }}
           >
-            Fotografía
+            Photography
           </span>
         </Link>
 
@@ -98,7 +98,7 @@ export default function Navbar() {
           ))}
           <li style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
             <Link href="/sesiones" className="btn btn-outline" style={{ padding: "0.55rem 1.2rem", fontSize: "0.72rem" }}>
-              Área de Clientes
+              Client Portal
             </Link>
             <Link href="/login" className="btn btn-gold" style={{ padding: "0.55rem 1.2rem", fontSize: "0.72rem" }}>
               Login
@@ -153,7 +153,7 @@ export default function Navbar() {
             </a>
           ))}
           <Link href="/sesiones" className="btn btn-outline" style={{ textAlign: "center", justifyContent: "center" }} onClick={() => setMenuOpen(false)}>
-            Área de Clientes
+            Client Portal
           </Link>
           <Link href="/login" className="btn btn-gold" style={{ textAlign: "center", justifyContent: "center" }} onClick={() => setMenuOpen(false)}>
             Login

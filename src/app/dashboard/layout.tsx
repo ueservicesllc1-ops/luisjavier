@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }}
       >
         <div
-          className="container"
+          className="container header-container"
           style={{
             display: "flex",
             alignItems: "center",
@@ -107,7 +107,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 color: "var(--color-gold)",
               }}
             >
-              Fotografía
+              Photography
             </span>
           </Link>
 
@@ -138,7 +138,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               }}
             >
               <LayoutDashboard size={14} />
-              Mis Sesiones
+              My Sessions
             </Link>
 
             {user && (user.email === "ueservicesllc1@gmail.com" || user.email === "cliente@demo.com") && (
@@ -165,7 +165,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 }}
               >
                 <Shield size={14} />
-                Panel Admin
+                Admin Panel
               </Link>
             )}
           </nav>
@@ -205,7 +205,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <button
               onClick={handleLogout}
-              title="Cerrar sesión"
+              title="Log Out"
               style={{
                 width: 36,
                 height: 36,
@@ -245,7 +245,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <style>{`
         @media (max-width: 600px) {
-          .dash-nav { display: none !important; }
+          .header-container {
+            flex-direction: column !important;
+            gap: 0.75rem !important;
+            align-items: center !important;
+          }
           .user-pill span { display: none !important; }
         }
       `}</style>
