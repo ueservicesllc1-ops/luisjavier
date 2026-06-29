@@ -906,26 +906,28 @@ export default function AdminPage() {
             position: "fixed",
             inset: 0,
             zIndex: 1000,
-            background: "rgba(0,0,0,0.85)",
-            backdropFilter: "blur(8px)",
+            background: "rgba(6, 6, 6, 0.8)",
+            backdropFilter: "blur(16px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "1.5rem",
+            padding: "clamp(1rem, 5vw, 3rem)",
           }}
         >
           <div
             className="card"
             style={{
               width: "100%",
-              maxWidth: "800px",
-              maxHeight: "85vh",
+              maxWidth: "900px",
+              maxHeight: "90vh",
               display: "flex",
               flexDirection: "column",
-              padding: "2rem",
+              padding: "clamp(1.5rem, 4vw, 2.5rem)",
               position: "relative",
-              background: "var(--color-bg-card)",
-              border: "1px solid var(--color-border)",
+              background: "rgba(18, 18, 18, 0.95)",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
+              borderRadius: "20px",
+              boxShadow: "0 25px 60px rgba(0, 0, 0, 0.8)",
             }}
           >
             {/* Close Button */}
@@ -935,95 +937,127 @@ export default function AdminPage() {
                 position: "absolute",
                 top: "1.5rem",
                 right: "1.5rem",
-                background: "transparent",
-                border: "none",
+                background: "rgba(255, 255, 255, 0.03)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "50%",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 color: "var(--color-text-muted)",
                 cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+                e.currentTarget.style.color = "var(--color-cream)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                e.currentTarget.style.color = "var(--color-text-muted)";
               }}
             >
-              <X size={20} />
+              <X size={18} />
             </button>
 
-            <h2 className="serif" style={{ fontSize: "1.8rem", color: "var(--color-cream)", marginBottom: "0.5rem" }}>
-              {sessions.find((s) => s.id === manageSessionId)?.title || "Manage Session Photos"}
-            </h2>
-            <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginBottom: "1.5rem" }}>
-              Review and delete photos from this session.
-            </p>
+            <div style={{ marginBottom: "2rem", paddingRight: "3rem" }}>
+              <span className="badge badge-gold" style={{ marginBottom: "0.5rem" }}>Gallery Manager</span>
+              <h2 className="serif" style={{ fontSize: "clamp(1.5rem, 3vw, 2.2rem)", color: "var(--color-cream)", marginTop: "0.25rem" }}>
+                {sessions.find((s) => s.id === manageSessionId)?.title || "Manage Session Photos"}
+              </h2>
+              <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginTop: "0.4rem" }}>
+                Viewing all uploaded assets. Click the delete button on any photo to remove it from this gallery.
+              </p>
+            </div>
 
             {loadingManagePhotos ? (
-              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px" }}>
-                <Loader2 size={32} className="animate-spin" style={{ color: "var(--color-gold)" }} />
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "300px" }}>
+                <Loader2 size={36} className="animate-spin" style={{ color: "var(--color-gold)" }} />
               </div>
             ) : managePhotos.length === 0 ? (
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "200px", gap: "1rem" }}>
-                <span style={{ fontSize: "2rem" }}>📷</span>
-                <p style={{ color: "var(--color-text-muted)", fontSize: "0.9rem" }}>No photos in this session.</p>
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "300px", gap: "1rem" }}>
+                <span style={{ fontSize: "3rem", filter: "grayscale(1)" }}>📷</span>
+                <p style={{ color: "var(--color-text-muted)", fontSize: "0.95rem" }}>This session has no photos yet.</p>
               </div>
             ) : (
               <div
                 style={{
                   flex: 1,
                   overflowY: "auto",
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-                  gap: "1rem",
                   paddingRight: "0.5rem",
                   marginTop: "0.5rem",
                 }}
               >
-                {managePhotos.map((photo) => {
-                  const photoUrl = `${process.env.NEXT_PUBLIC_B2_URL || "https://s3.us-east-005.backblazeb2.com/photogra"}/${photo.b2Key}`;
-                  return (
-                    <div
-                      key={photo.id}
-                      style={{
-                        position: "relative",
-                        aspectRatio: "1",
-                        borderRadius: "var(--radius-md)",
-                        overflow: "hidden",
-                        background: "var(--color-bg-elevated)",
-                        border: "1px solid var(--color-border)",
-                      }}
-                    >
-                      <img src={photoUrl} alt={photo.filename} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      
-                      <button
-                        onClick={() => handleDeletePhoto(photo.id, manageSessionId, photo.b2Key)}
-                        title="Delete photo"
+                <div
+                  style={{
+                    columnCount: managePhotos.length < 3 ? managePhotos.length : 3,
+                    columnGap: "1rem",
+                  }}
+                  className="modal-masonry"
+                >
+                  {managePhotos.map((photo) => {
+                    const photoUrl = `${process.env.NEXT_PUBLIC_B2_URL || "https://s3.us-east-005.backblazeb2.com/photogra"}/${photo.b2Key}`;
+                    return (
+                      <div
+                        key={photo.id}
                         style={{
-                          position: "absolute",
-                          top: "0.5rem",
-                          right: "0.5rem",
-                          width: "32px",
-                          height: "32px",
-                          background: "rgba(15,15,15,0.85)",
-                          border: "1px solid rgba(255,255,255,0.15)",
-                          borderRadius: "50%",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          cursor: "pointer",
-                          color: "#ef4444",
-                          boxShadow: "0 2px 8px rgba(0,0,0,0.5)",
-                          transition: "all 0.2s",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = "scale(1.1)";
-                          e.currentTarget.style.background = "#ef4444";
-                          e.currentTarget.style.color = "#fff";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                          e.currentTarget.style.background = "rgba(15,15,15,0.85)";
-                          e.currentTarget.style.color = "#ef4444";
+                          breakInside: "avoid",
+                          marginBottom: "1rem",
+                          position: "relative",
+                          borderRadius: "var(--radius-md)",
+                          overflow: "hidden",
+                          background: "rgba(255, 255, 255, 0.02)",
+                          border: "1px solid rgba(255, 255, 255, 0.05)",
                         }}
                       >
-                        <Trash2 size={15} />
-                      </button>
-                    </div>
-                  );
-                })}
+                        <img
+                          src={photoUrl}
+                          alt={photo.filename}
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                          }}
+                        />
+                        
+                        <button
+                          onClick={() => handleDeletePhoto(photo.id, manageSessionId, photo.b2Key)}
+                          title="Delete photo"
+                          style={{
+                            position: "absolute",
+                            top: "0.5rem",
+                            right: "0.5rem",
+                            width: "30px",
+                            height: "30px",
+                            background: "rgba(10, 10, 10, 0.8)",
+                            border: "1px solid rgba(255, 255, 255, 0.1)",
+                            borderRadius: "50%",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                            color: "#f87171",
+                            boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
+                            transition: "all 0.2s",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = "scale(1.1)";
+                            e.currentTarget.style.background = "#ef4444";
+                            e.currentTarget.style.color = "#fff";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = "scale(1)";
+                            e.currentTarget.style.background = "rgba(10, 10, 10, 0.8)";
+                            e.currentTarget.style.color = "#f87171";
+                          }}
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
@@ -1036,6 +1070,16 @@ export default function AdminPage() {
         }
         @keyframes spin {
           to { transform: rotate(360deg); }
+        }
+        @media (max-width: 600px) {
+          .modal-masonry {
+            column-count: 1 !important;
+          }
+        }
+        @media (min-width: 601px) and (max-width: 900px) {
+          .modal-masonry {
+            column-count: 2 !important;
+          }
         }
         @media (max-width: 768px) {
           .admin-grid { grid-template-columns: 1fr !important; }
