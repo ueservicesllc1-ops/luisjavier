@@ -31,6 +31,7 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -49,10 +50,10 @@ export default function AdminPage() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
 
-  // Photos detail states
-  const [sessionPhotos, setSessionPhotos] = useState<Record<string, any[]>>({});
-  const [loadingPhotosMap, setLoadingPhotosMap] = useState<Record<string, boolean>>({});
-  const [expandedSessions, setExpandedSessions] = useState<Record<string, boolean>>({});
+  // Photos detail modal states
+  const [manageSessionId, setManageSessionId] = useState<string | null>(null);
+  const [managePhotos, setManagePhotos] = useState<any[]>([]);
+  const [loadingManagePhotos, setLoadingManagePhotos] = useState(false);
 
   // Form states
   const [editMode, setEditMode] = useState<"create" | "add_photos">("create");
@@ -377,27 +378,29 @@ export default function AdminPage() {
     }
   };
 
-  const toggleSessionPhotos = async (sessionId: string) => {
-    const isExpanded = !!expandedSessions[sessionId];
-    setExpandedSessions((prev) => ({ ...prev, [sessionId]: !isExpanded }));
-
-    if (!isExpanded && !sessionPhotos[sessionId]) {
-      setLoadingPhotosMap((prev) => ({ ...prev, [sessionId]: true }));
-      try {
-        const q = query(
-          collection(db, "photos"),
-          where("sessionId", "==", sessionId),
-          orderBy("createdAt", "desc")
-        );
-        const snap = await getDocs(q);
-        const photosList = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        setSessionPhotos((prev) => ({ ...prev, [sessionId]: photosList }));
-      } catch (err) {
-        console.error("Error loading photos:", err);
-      } finally {
-        setLoadingPhotosMap((prev) => ({ ...prev, [sessionId]: false }));
-      }
+  const openManageModal = async (sessionId: string) => {
+    setManageSessionId(sessionId);
+    setLoadingManagePhotos(true);
+    setManagePhotos([]);
+    try {
+      const q = query(
+        collection(db, "photos"),
+        where("sessionId", "==", sessionId),
+        orderBy("createdAt", "desc")
+      );
+      const snap = await getDocs(q);
+      const photosList = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setManagePhotos(photosList);
+    } catch (err) {
+      console.error("Error loading photos:", err);
+    } finally {
+      setLoadingManagePhotos(false);
     }
+  };
+
+  const closeManageModal = () => {
+    setManageSessionId(null);
+    setManagePhotos([]);
   };
 
   const handleDeletePhoto = async (photoId: string, sessionId: string, photoB2Key: string) => {
@@ -421,7 +424,7 @@ export default function AdminPage() {
         // 3. Update B2 cover if needed
         if (isCover) {
           // Find another photo to set as cover
-          const remainingPhotos = sessionPhotos[sessionId]?.filter((p) => p.id !== photoId) || [];
+          const remainingPhotos = managePhotos.filter((p) => p.id !== photoId);
           if (remainingPhotos.length > 0) {
             const nextPhoto = remainingPhotos[0];
             const baseUrl = process.env.NEXT_PUBLIC_B2_URL || "https://s3.us-east-005.backblazeb2.com/photogra";
@@ -438,10 +441,7 @@ export default function AdminPage() {
       }
 
       // 5. Update local state
-      setSessionPhotos((prev) => ({
-        ...prev,
-        [sessionId]: prev[sessionId]?.filter((p) => p.id !== photoId) || [],
-      }));
+      setManagePhotos((prev) => prev.filter((p) => p.id !== photoId));
 
       // 6. Refresh sessions list
       await fetchSessions();
@@ -882,68 +882,14 @@ export default function AdminPage() {
                       </button>
 
                       <button
-                        onClick={() => toggleSessionPhotos(sess.id)}
+                        onClick={() => openManageModal(sess.id)}
                         className="btn btn-ghost"
                         style={{ width: "100%", fontSize: "0.72rem", padding: "0.5rem 1rem", justifyContent: "center", gap: "0.4rem" }}
                       >
-                        {expandedSessions[sess.id] ? (
-                          <>
-                            <ChevronUp size={14} />
-                            Hide Photos
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown size={14} />
-                            Manage Photos ({sess.photoCount || 0})
-                          </>
-                        )}
+                        <ImageIcon size={14} />
+                        Manage Photos ({sess.photoCount || 0})
                       </button>
                     </div>
-
-                    {expandedSessions[sess.id] && (
-                      <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: "1rem", marginTop: "0.5rem" }}>
-                        {loadingPhotosMap[sess.id] ? (
-                          <div style={{ display: "flex", justifyContent: "center", padding: "1rem" }}>
-                            <Loader2 size={16} className="animate-spin" />
-                          </div>
-                        ) : !sessionPhotos[sess.id] || sessionPhotos[sess.id].length === 0 ? (
-                          <p style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", textAlign: "center" }}>No photos in this session.</p>
-                        ) : (
-                          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem", maxHeight: "200px", overflowY: "auto", paddingRight: "0.25rem" }}>
-                            {sessionPhotos[sess.id].map((photo) => {
-                              const photoUrl = `${process.env.NEXT_PUBLIC_B2_URL || "https://s3.us-east-005.backblazeb2.com/photogra"}/${photo.b2Key}`;
-                              return (
-                                <div key={photo.id} style={{ position: "relative", width: "100%", aspectRatio: "1", borderRadius: "var(--radius-sm)", overflow: "hidden", background: "var(--color-bg-elevated)" }}>
-                                  <img src={photoUrl} alt={photo.filename} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                  <button
-                                    onClick={() => handleDeletePhoto(photo.id, sess.id, photo.b2Key)}
-                                    title="Delete photo"
-                                    style={{
-                                      position: "absolute",
-                                      top: "0.2rem",
-                                      right: "0.2rem",
-                                      width: "20px",
-                                      height: "20px",
-                                      background: "rgba(0,0,0,0.7)",
-                                      border: "none",
-                                      borderRadius: "50%",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      cursor: "pointer",
-                                      color: "#ef4444",
-                                      padding: 0
-                                    }}
-                                  >
-                                    <Trash2 size={10} />
-                                  </button>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 );
               })}
@@ -952,6 +898,137 @@ export default function AdminPage() {
         </div>
 
       </div>
+
+      {/* Manage Photos Modal */}
+      {manageSessionId && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            background: "rgba(0,0,0,0.85)",
+            backdropFilter: "blur(8px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1.5rem",
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              width: "100%",
+              maxWidth: "800px",
+              maxHeight: "85vh",
+              display: "flex",
+              flexDirection: "column",
+              padding: "2rem",
+              position: "relative",
+              background: "var(--color-bg-card)",
+              border: "1px solid var(--color-border)",
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeManageModal}
+              style={{
+                position: "absolute",
+                top: "1.5rem",
+                right: "1.5rem",
+                background: "transparent",
+                border: "none",
+                color: "var(--color-text-muted)",
+                cursor: "pointer",
+              }}
+            >
+              <X size={20} />
+            </button>
+
+            <h2 className="serif" style={{ fontSize: "1.8rem", color: "var(--color-cream)", marginBottom: "0.5rem" }}>
+              {sessions.find((s) => s.id === manageSessionId)?.title || "Manage Session Photos"}
+            </h2>
+            <p style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginBottom: "1.5rem" }}>
+              Review and delete photos from this session.
+            </p>
+
+            {loadingManagePhotos ? (
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px" }}>
+                <Loader2 size={32} className="animate-spin" style={{ color: "var(--color-gold)" }} />
+              </div>
+            ) : managePhotos.length === 0 ? (
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "200px", gap: "1rem" }}>
+                <span style={{ fontSize: "2rem" }}>📷</span>
+                <p style={{ color: "var(--color-text-muted)", fontSize: "0.9rem" }}>No photos in this session.</p>
+              </div>
+            ) : (
+              <div
+                style={{
+                  flex: 1,
+                  overflowY: "auto",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
+                  gap: "1rem",
+                  paddingRight: "0.5rem",
+                  marginTop: "0.5rem",
+                }}
+              >
+                {managePhotos.map((photo) => {
+                  const photoUrl = `${process.env.NEXT_PUBLIC_B2_URL || "https://s3.us-east-005.backblazeb2.com/photogra"}/${photo.b2Key}`;
+                  return (
+                    <div
+                      key={photo.id}
+                      style={{
+                        position: "relative",
+                        aspectRatio: "1",
+                        borderRadius: "var(--radius-md)",
+                        overflow: "hidden",
+                        background: "var(--color-bg-elevated)",
+                        border: "1px solid var(--color-border)",
+                      }}
+                    >
+                      <img src={photoUrl} alt={photo.filename} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      
+                      <button
+                        onClick={() => handleDeletePhoto(photo.id, manageSessionId, photo.b2Key)}
+                        title="Delete photo"
+                        style={{
+                          position: "absolute",
+                          top: "0.5rem",
+                          right: "0.5rem",
+                          width: "32px",
+                          height: "32px",
+                          background: "rgba(15,15,15,0.85)",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          borderRadius: "50%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          color: "#ef4444",
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.5)",
+                          transition: "all 0.2s",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = "scale(1.1)";
+                          e.currentTarget.style.background = "#ef4444";
+                          e.currentTarget.style.color = "#fff";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "scale(1)";
+                          e.currentTarget.style.background = "rgba(15,15,15,0.85)";
+                          e.currentTarget.style.color = "#ef4444";
+                        }}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       
       <style>{`
         .animate-spin {
